@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="uvindexforecast.theoneandonly.com.uvindexforecast.UVIndexForecast"
+    tools:ignore="MergeRootFrame"
+    android:background="#eddfc7">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/today_label"
+        android:id="@+id/todayUVIndex"
+        android:layout_marginTop="101dp"
+        android:layout_centerHorizontal="true"
+        android:textSize="78sp"
+        android:typeface="sans"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:textColor="#3e3223" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/editText"
+        android:layout_below="@+id/todayUVIndex"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold"
+        android:textSize="90sp"
+        android:textColor="#cd3f0c"
+        android:text="@string/enter_text"
+        android:inputType="text" />/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/high_uv_tips"
+        android:id="@+id/tips"
+        android:textSize="24sp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="55dp" />
+
+</RelativeLayout>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+<PreferenceCategory android:title="@string/loc_title">
+    <Preference android:title="@string/pref_location_title"
+        android:key="swa_loc">
+        <intent android:targetPackage="com.uvindexforecast.weather"
+            android:targetClass="com.uvindexforecast.weather.settings.CityFinderActivity"
+            />
+    </Preference>
+</PreferenceCategory>
+
+</PreferenceScreen>

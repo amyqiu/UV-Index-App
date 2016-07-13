@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">UV Index Forecast</string>
+    <string name="today_label">Today\'s UV Index:</string>
+    <string name="uv_index_forecast_app_id">24842</string>
+    <string name="high_uv_tips">Tips: Wear sunscreen with a SPF of at least 30, reapplying every 2 hours.</string>
+    <string name="action_settings">Settings</string>
+    <string name="notification_toggle">Notify me if the UV index for tomorrow is high: </string>
+    <string name="notification_threshold">Choose the UV threshold: </string>
+    <string-array name="uv_index_options">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+    </string-array>
+    <string name="loc_title">Choose the Location</string>
+    <string name="pref_location_title">Current location: </string>
+    <string name="enter_text">text changes</string>
+</resources>
