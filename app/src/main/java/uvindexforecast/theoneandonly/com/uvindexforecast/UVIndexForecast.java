@@ -7,11 +7,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import java.io.InputStream;
+import java.util.List;
 
 public class UVIndexForecast extends AppCompatActivity {
     private String URL = "http://dd.weather.gc.ca/citypage_weather/xml/ON/s0000585_e.xml";
     private HandleXML obj;
-    EditText ed1;
+    private List <Location> locationList;
+    TextView ed1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,11 +25,16 @@ public class UVIndexForecast extends AppCompatActivity {
         setContentView(R.layout.activity_uvindex_forecast);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
-        ed1=(EditText)findViewById(R.id.editText);
+
+        InputStream inputStream = getResources().openRawResource(R.raw.site_list_towns_en);
+        HandleCSV csvFile = new HandleCSV(inputStream);
+        List scoreList = csvFile.read(locationList);
+
+        ed1=(TextView)findViewById(R.id.editText);
         obj = new HandleXML(URL);
         obj.fetchXML();
 
-        while(obj.parsingComplete);
+        //while(obj.parsingComplete);
         ed1.setText(obj.getUVIndex());
     }
 
