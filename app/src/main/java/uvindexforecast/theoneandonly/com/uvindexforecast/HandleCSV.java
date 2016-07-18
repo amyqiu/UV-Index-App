@@ -11,13 +11,14 @@ import java.util.List;
  */
 public class HandleCSV {
     InputStream inputStream;
+    List<String[]> resultList;
 
     public HandleCSV(InputStream inputStream){
         this.inputStream = inputStream;
     }
 
-    public List read(List <Location> locationList){
-        List<String[]> resultList = new ArrayList<String[]>();
+    public void read(List <Location> locationList){
+        resultList = new ArrayList<String[]>();
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         try {
             String csvLine;
@@ -39,6 +40,8 @@ public class HandleCSV {
                 throw new RuntimeException("Error while closing input stream: "+e);
             }
         }
-        return resultList;
+        //return resultList;
     }
+
+
 }

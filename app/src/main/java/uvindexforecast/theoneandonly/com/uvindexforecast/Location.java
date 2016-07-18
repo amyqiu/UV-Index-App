@@ -19,6 +19,18 @@ public class Location {
     public String toString() {
         return location_name + "," + province;
     }
+
+    public String getLocationName(){
+        return location_name;
+    }
+
+    public String getProvince(){
+        return province;
+    }
+
+    public String getCode(){
+        return code;
+    }
 }
 
 

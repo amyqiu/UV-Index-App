@@ -10,12 +10,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UVIndexForecast extends AppCompatActivity {
     private String URL = "http://dd.weather.gc.ca/citypage_weather/xml/ON/s0000585_e.xml";
     private HandleXML obj;
-    private List <Location> locationList;
+    public List <Location> locationResultList;
     TextView ed1;
 
     @Override
@@ -28,7 +29,8 @@ public class UVIndexForecast extends AppCompatActivity {
 
         InputStream inputStream = getResources().openRawResource(R.raw.site_list_towns_en);
         HandleCSV csvFile = new HandleCSV(inputStream);
-        List scoreList = csvFile.read(locationList);
+        locationResultList = new ArrayList<Location>();
+        csvFile.read(locationResultList);
 
         ed1=(TextView)findViewById(R.id.editText);
         obj = new HandleXML(URL);
@@ -58,5 +60,10 @@ public class UVIndexForecast extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+
+    public List<Location> getLocationResultList()
+    {
+        return locationResultList;
     }
 }

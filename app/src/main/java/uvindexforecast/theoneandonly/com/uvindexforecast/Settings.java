@@ -4,12 +4,14 @@ import android.content.SharedPreferences;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -22,6 +24,25 @@ public class Settings extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        AutoCompleteTextView edt = (AutoCompleteTextView) this.findViewById(R.id.edtLocation);
+        LocationAdapter adpt = new LocationAdapter(this, null);
+        edt.setAdapter(adpt);
+        //getActionBar().setDisplayHomeAsUpEnabled(true);
+
+        edt.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Location result = (Location) parent.getItemAtPosition(position);
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Settings.this);
+                //Log.d("SwA", "WOEID [" + result.getWoeid() + "]");
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("code", result.getCode());
+                editor.putString("locationName", result.getLocationName());
+                editor.putString("province", result.getProvince());
+                editor.commit();
+                NavUtils.navigateUpFromSameTask(Settings.this);
+            }
+        });
     }
 
     public class SwitchActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
