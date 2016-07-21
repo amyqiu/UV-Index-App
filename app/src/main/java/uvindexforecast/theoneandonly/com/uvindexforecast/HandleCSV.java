@@ -1,5 +1,9 @@
 package uvindexforecast.theoneandonly.com.uvindexforecast;
 
+import android.util.Log;
+import android.widget.EditText;
+import android.widget.TextView;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +31,7 @@ public class HandleCSV {
                 resultList.add(row);
                 Location city = new Location(row[0], row[1], row[2]);
                 locationList.add(city);
+                Log.d("City", city.toString());
             }
         }
         catch (IOException ex) {

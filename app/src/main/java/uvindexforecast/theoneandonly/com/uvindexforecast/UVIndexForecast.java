@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.Serializable;
 
 public class UVIndexForecast extends AppCompatActivity {
     private String URL = "http://dd.weather.gc.ca/citypage_weather/xml/ON/s0000585_e.xml";
@@ -31,13 +33,18 @@ public class UVIndexForecast extends AppCompatActivity {
         HandleCSV csvFile = new HandleCSV(inputStream);
         locationResultList = new ArrayList<Location>();
         csvFile.read(locationResultList);
+        Log.d("Read_list", locationResultList.get(1).toString());
 
         ed1=(TextView)findViewById(R.id.editText);
         obj = new HandleXML(URL);
         obj.fetchXML();
-
+        Log.d("URL_name", URL);
         //while(obj.parsingComplete);
         ed1.setText(obj.getUVIndex());
+
+        Intent i = new Intent(this, LocationAdapter.class);
+        i.putExtra("myLocationList", (Serializable)locationResultList);
+        Log.d("Result", locationResultList.get(1).toString());
     }
 
     @Override

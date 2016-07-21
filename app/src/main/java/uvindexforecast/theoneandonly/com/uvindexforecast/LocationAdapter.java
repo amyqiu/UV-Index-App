@@ -1,6 +1,9 @@
 package uvindexforecast.theoneandonly.com.uvindexforecast;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +55,7 @@ public class LocationAdapter extends ArrayAdapter<Location> implements Filterabl
 
         }
 
-        TextView tv = (TextView) result.findViewById(R.id.txtLocationName);
+        TextView tv = (TextView) result.findViewById(R.id.edtLocation);
         tv.setText(locationList.get(position).getLocationName() + "," + locationList.get(position).getProvince());
 
         return result;
@@ -75,8 +78,11 @@ public class LocationAdapter extends ArrayAdapter<Location> implements Filterabl
                 FilterResults results = new FilterResults();
                 if (constraint == null || constraint.length() < 2)
                     return results;
-                UVIndexForecast temp = new UVIndexForecast();
-                List <Location> locationResultList = temp.getLocationResultList();
+                //UVIndexForecast temp = new UVIndexForecast();
+                //List <Location> locationResultList = temp.getLocationResultList();
+                Intent i = ((Activity) ctx).getIntent();
+                List <Location> locationResultList = (List<Location>) i.getSerializableExtra("myLocationList");
+                Log.d("Output", locationResultList.get(1).toString());
                 results.values = locationResultList;
                 results.count = locationResultList.size();
                 return results;

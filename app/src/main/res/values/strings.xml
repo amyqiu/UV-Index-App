@@ -19,7 +19,8 @@
         <item>10</item>
         <item>11</item>
     </string-array>
-    <string name="loc_title">Choose the Location</string>
+    <string name="loc_title">Location: </string>
+    <string name="loc_name">Canadian town/city </string>
     <string name="pref_location_title">Current location: </string>
     <string name="enter_text">text changes</string>
 </resources>
