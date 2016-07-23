@@ -80,9 +80,10 @@ public class LocationAdapter extends ArrayAdapter<Location> implements Filterabl
                     return results;
                 //UVIndexForecast temp = new UVIndexForecast();
                 //List <Location> locationResultList = temp.getLocationResultList();
-                Intent i = ((Activity) ctx).getIntent();
-                List <Location> locationResultList = (List<Location>) i.getSerializableExtra("myLocationList");
-                Log.d("Output", locationResultList.get(1).toString());
+                //Intent i = ((Activity) ctx).getIntent();
+                ArrayList <Location> locationResultList;
+                //locationResultList = (ArrayList<Location>) i.getExtras().getSerializable("myLocationList");
+                locationResultList = (ArrayList<Location>) UVIndexForecast.getLocationResultList();
                 results.values = locationResultList;
                 results.count = locationResultList.size();
                 return results;
@@ -91,6 +92,7 @@ public class LocationAdapter extends ArrayAdapter<Location> implements Filterabl
             @Override
             protected void publishResults(CharSequence constraint, Filter.FilterResults results) {
                 locationList = (List) results.values;
+                Log.d("Output", locationList.get(1).toString());
                 notifyDataSetChanged();
             }
         };
