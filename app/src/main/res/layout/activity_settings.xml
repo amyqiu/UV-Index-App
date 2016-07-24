@@ -25,10 +25,13 @@
         android:text="@string/notification_toggle"
         android:id="@+id/switch1"
         android:textSize="24sp"
-        android:clickable="false"
-        android:layout_marginTop="44dp"
-        android:layout_below="@+id/textView"
-        android:layout_alignParentStart="true" />
+        android:clickable="true"
+        android:layout_marginTop="61dp"
+        android:enabled="true"
+        android:background="#ffffff"
+        android:layout_below="@+id/edtLocation"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -47,18 +50,22 @@
         android:id="@+id/spinner"
         android:layout_alignBottom="@+id/textView2"
         android:layout_toEndOf="@+id/textView2"
-        android:spinnerMode="dropdown" />
+        android:spinnerMode="dialog"
+        android:clickable="true"
+        android:entries="@array/uv_index_options"/>
 
     <AutoCompleteTextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/loc_name"
+        android:hint="@string/loc_name"
         android:id="@+id/edtLocation"
-        android:layout_marginTop="39dp"
         android:textSize="24sp"
-        android:layout_below="@+id/spinner"
+        android:width='200dp'
+        android:layout_below="@+id/textView"
         android:layout_alignLeft="@+id/textView"
-        android:layout_alignStart="@+id/textView" />
+        android:layout_alignStart="@+id/textView"
+        android:layout_marginTop="63dp"
+        android:dropDownWidth="match_parent"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -69,6 +76,14 @@
         android:textSize="24sp"
         android:textColor="#000000"
         android:layout_alignBottom="@+id/edtLocation"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView android:id="@+id/txtLocationName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:enabled="true"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
