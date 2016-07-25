@@ -18,12 +18,11 @@ import java.io.Serializable;
 public class UVIndexForecast extends AppCompatActivity {
     private String URL = "http://dd.weather.gc.ca/citypage_weather/xml/ON/s0000585_e.xml";
     private HandleXML obj;
-    public List <Location> locationResultList;
+    public static ArrayList <Location> locationResultList;
     TextView ed1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_uvindex_forecast);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
@@ -31,20 +30,14 @@ public class UVIndexForecast extends AppCompatActivity {
 
         InputStream inputStream = getResources().openRawResource(R.raw.site_list_towns_en);
         HandleCSV csvFile = new HandleCSV(inputStream);
-        locationResultList = new ArrayList<Location>();
+        locationResultList = new ArrayList<>();
         csvFile.read(locationResultList);
-        Log.d("Read_list", locationResultList.get(1).toString());
 
         ed1=(TextView)findViewById(R.id.editText);
         obj = new HandleXML(URL);
         obj.fetchXML();
-        Log.d("URL_name", URL);
-        //while(obj.parsingComplete);
+        while(obj.parsingComplete);
         ed1.setText(obj.getUVIndex());
-
-        Intent i = new Intent(this, LocationAdapter.class);
-        i.putExtra("myLocationList", (Serializable)locationResultList);
-        Log.d("Result", locationResultList.get(1).toString());
     }
 
     @Override
@@ -69,8 +62,20 @@ public class UVIndexForecast extends AppCompatActivity {
         }
     }
 
-    public List<Location> getLocationResultList()
+    public static List<Location> getLocationResultList(String locationName)
     {
-        return locationResultList;
+        int j = 0;
+        List <Location> shortLocationList = new ArrayList<>();
+        for (int i = 0; i < locationResultList.size(); i++){
+            if (locationResultList.get(i).getLocationName() != null && locationResultList.get(i).getLocationName().startsWith(locationName)) {
+                Location newLocation = new Location(locationResultList.get(i).getCode(), locationResultList.get(i).getLocationName(), locationResultList.get(i).getProvince());
+                Log.d("shortLocationList", newLocation.getLocationName());
+                shortLocationList.add(j, newLocation);
+                Log.d("shortLocationAdd", newLocation.toString());
+                j++;
+            }
+        }
+        //Log.d("shortLocationFirst", shortLocationList.get(0).toString());
+        return shortLocationList;
     }
 }
