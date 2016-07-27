@@ -15,13 +15,13 @@ import java.util.List;
  */
 public class HandleCSV {
     InputStream inputStream;
-    List<String[]> resultList;
+    ArrayList<String[]> resultList;
 
     public HandleCSV(InputStream inputStream){
         this.inputStream = inputStream;
     }
 
-    public void read(List <Location> locationList){
+    public void read(ArrayList <Location> locationList){
         resultList = new ArrayList<String[]>();
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         try {
@@ -31,7 +31,6 @@ public class HandleCSV {
                 resultList.add(row);
                 Location city = new Location(row[0], row[1], row[2]);
                 locationList.add(city);
-                Log.d("City", city.toString());
             }
         }
         catch (IOException ex) {

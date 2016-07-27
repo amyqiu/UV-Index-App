@@ -1,5 +1,7 @@
 package uvindexforecast.theoneandonly.com.uvindexforecast;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -18,7 +20,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 public class Settings extends AppCompatActivity {
-
+    private static Location currentLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,7 @@ public class Settings extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Location result = (Location) parent.getItemAtPosition(position);
+                currentLocation = result;
                 SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Settings.this);
                 //Log.d("SwA", "WOEID [" + result.getWoeid() + "]");
                 SharedPreferences.Editor editor = sharedPref.edit();
@@ -40,9 +43,11 @@ public class Settings extends AppCompatActivity {
                 editor.putString("locationName", result.getLocationName());
                 editor.putString("province", result.getProvince());
                 editor.commit();
-                NavUtils.navigateUpFromSameTask(Settings.this);
+                //NavUtils.navigateUpFromSameTask(Settings.this);
+
             }
         });
+
     }
 
     public class SwitchActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
@@ -107,6 +112,10 @@ public class Settings extends AppCompatActivity {
 
         public void onNothingSelected(AdapterView<?> parent) {
             // Another interface callback
+        }
+
+        public Location getCurrentLocation(){
+            return currentLocation;
         }
     }
 }

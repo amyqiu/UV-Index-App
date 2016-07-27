@@ -24,7 +24,7 @@ public class LocationAdapter extends ArrayAdapter<Location> implements Filterabl
     private List<Location> locationList = new ArrayList<Location>();
 
     public LocationAdapter(Context ctx, List<Location> locationList) {
-        super(ctx, R.layout.activity_settings, locationList);
+        super(ctx, R.layout.locationresult_layout, locationList);
         this.locationList = locationList;
         this.ctx = ctx;
     }
@@ -51,11 +51,11 @@ public class LocationAdapter extends ArrayAdapter<Location> implements Filterabl
 
         if (result == null) {
             LayoutInflater inf = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            result = inf.inflate(R.layout.activity_settings, parent, false);
+            result = inf.inflate(R.layout.locationresult_layout, parent, false);
 
         }
 
-        TextView tv = (TextView) result.findViewById(R.id.edtLocation);
+        TextView tv = (TextView) result.findViewById(R.id.txtLocationName);
         tv.setText(locationList.get(position).getLocationName() + "," + locationList.get(position).getProvince());
 
         return result;
@@ -78,25 +78,23 @@ public class LocationAdapter extends ArrayAdapter<Location> implements Filterabl
                 FilterResults results = new FilterResults();
                 if (constraint == null || constraint.length() < 2)
                     return results;
-                //UVIndexForecast temp = new UVIndexForecast();
-                //List <Location> locationResultList = temp.getLocationResultList();
-                //Intent i = ((Activity) ctx).getIntent();
-                ArrayList <Location> locationResultList;
-                //locationResultList = (ArrayList<Location>) i.getExtras().getSerializable("myLocationList");
-                locationResultList = (ArrayList<Location>) UVIndexForecast.getLocationResultList();
+                List <Location> locationResultList;
+                locationResultList = UVIndexForecast.getLocationResultList(constraint.toString());
+                //Log.d("Output1", locationResultList.get(0).toString());
                 results.values = locationResultList;
                 results.count = locationResultList.size();
                 return results;
             }
 
+            @SuppressWarnings("unchecked")
             @Override
             protected void publishResults(CharSequence constraint, Filter.FilterResults results) {
                 locationList = (List) results.values;
-                Log.d("Output", locationList.get(1).toString());
+                //Log.d("Output2", locationList.get(1).toString());
                 notifyDataSetChanged();
             }
         };
 
         return cityFilter;
-    }
+}
 }

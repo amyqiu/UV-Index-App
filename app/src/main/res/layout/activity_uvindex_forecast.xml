@@ -30,7 +30,7 @@
         android:id="@+id/todayUVIndex"
         android:layout_marginTop="101dp"
         android:layout_centerHorizontal="true"
-        android:textSize="78sp"
+        android:textSize="68sp"
         android:typeface="sans"
         android:textAlignment="center"
         android:textStyle="bold"
@@ -41,12 +41,13 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/editText"
-        android:layout_below="@+id/todayUVIndex"
-        android:layout_centerHorizontal="true"
         android:textStyle="bold"
         android:textSize="90sp"
         android:textColor="#cd3f0c"
-        android:text="@string/enter_text" />
+        android:text="@string/enter_text"
+        android:layout_below="@+id/todayUVIndex"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="26dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -55,9 +56,9 @@
         android:text="@string/high_uv_tips"
         android:id="@+id/tips"
         android:textSize="24sp"
-        android:layout_alignParentBottom="true"
+        android:layout_marginTop="56dp"
+        android:layout_below="@+id/editText"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="55dp" />
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
