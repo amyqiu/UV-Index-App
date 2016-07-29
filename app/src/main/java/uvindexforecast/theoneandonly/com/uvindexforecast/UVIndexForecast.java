@@ -1,6 +1,9 @@
 package uvindexforecast.theoneandonly.com.uvindexforecast;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -24,11 +27,14 @@ public class UVIndexForecast extends AppCompatActivity {
     private String secondURL = "/";
     private String thirdURL = "_e.xml";
     private HandleXML obj;
-    public static ArrayList <Location> locationResultList;
-    static final int SETTINGS = 1;
-    TextView ed1;
+    private TextView ed1;
+    private NotificationManager notificationManager;
+    private Notification mNotification;
+    private PendingIntent mPendingIntent;
     private SharedPreferences prefs;
     private Location preferredLocation;
+    private static ArrayList <Location> locationResultList;
+    private static final int SETTINGS = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +43,28 @@ public class UVIndexForecast extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         preferredLocation = new Location();
+
+        Intent intent = new Intent("uvindexforecast.theoneandonly.com.uvindexforecast");
+        mPendingIntent = PendingIntent.getActivity(getApplicationContext(), 1, intent, 0);
+        Notification.Builder mBuilder = new Notification.Builder(getApplicationContext());
+
+        mBuilder.setAutoCancel(false);
+        mBuilder.setContentTitle("UV Index Alert");
+        mBuilder.setTicker("ticker text here");
+        mBuilder.setContentText("Wear sunscreen tomorrow!");
+        mBuilder.setSmallIcon(android.R.drawable.ic_menu_day);
+        mBuilder.setContentIntent(mPendingIntent);
+        mBuilder.setOngoing(true);
+        //API level 16
+        mBuilder.setSubText("The predicted UV index for tomorrow is 9");
+        mBuilder.setNumber(150);
+        mBuilder.build();
+        mNotification = mBuilder.build();
+        notificationManager.notify(11, mNotification);
 
         InputStream inputStream = getResources().openRawResource(R.raw.site_list_towns_en);
         HandleCSV csvFile = new HandleCSV(inputStream);
