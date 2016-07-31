@@ -1,6 +1,5 @@
 package uvindexforecast.theoneandonly.com.uvindexforecast;
 
-import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -13,27 +12,16 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.TextView;
-
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.Serializable;
 
 public class UVIndexForecast extends AppCompatActivity {
-    private String URL = "http://dd.weather.gc.ca/citypage_weather/xml/ON/s0000585_e.xml";
-    private String firstURL = "http://dd.weather.gc.ca/citypage_weather/xml/";
-    private String secondURL = "/";
-    private String thirdURL = "_e.xml";
-    private HandleXML obj;
-    private TextView ed1;
-    private NotificationManager notificationManager;
-    private Notification mNotification;
-    private PendingIntent mPendingIntent;
+
     private SharedPreferences prefs;
     private Location preferredLocation;
-    private static ArrayList <Location> locationResultList;
+    private static ArrayList<Location> locationResultList;
     private static final int SETTINGS = 1;
 
     @Override
@@ -42,29 +30,8 @@ public class UVIndexForecast extends AppCompatActivity {
         setContentView(R.layout.activity_uvindex_forecast);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
-
-        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         preferredLocation = new Location();
-
-        Intent intent = new Intent("uvindexforecast.theoneandonly.com.uvindexforecast");
-        mPendingIntent = PendingIntent.getActivity(getApplicationContext(), 1, intent, 0);
-        Notification.Builder mBuilder = new Notification.Builder(getApplicationContext());
-
-        mBuilder.setAutoCancel(false);
-        mBuilder.setContentTitle("UV Index Alert");
-        mBuilder.setTicker("ticker text here");
-        mBuilder.setContentText("Wear sunscreen tomorrow!");
-        mBuilder.setSmallIcon(android.R.drawable.ic_menu_day);
-        mBuilder.setContentIntent(mPendingIntent);
-        mBuilder.setOngoing(true);
-        //API level 16
-        mBuilder.setSubText("The predicted UV index for tomorrow is 9");
-        mBuilder.setNumber(150);
-        mBuilder.build();
-        mNotification = mBuilder.build();
-        notificationManager.notify(11, mNotification);
 
         InputStream inputStream = getResources().openRawResource(R.raw.site_list_towns_en);
         HandleCSV csvFile = new HandleCSV(inputStream);
@@ -75,18 +42,22 @@ public class UVIndexForecast extends AppCompatActivity {
     }
 
     private void refreshData() {
+        String firstURL = "http://dd.weather.gc.ca/citypage_weather/xml/";
+        String secondURL = "/";
+        String thirdURL = "_e.xml";
 
         if (prefs == null)
             return;
         preferredLocation.setLocation_name(prefs.getString("locationName", null));
         preferredLocation.setProvince(prefs.getString("province", null));
         preferredLocation.setCode(prefs.getString("code", null));
-        ed1=(TextView)findViewById(R.id.editText);
-        obj = new HandleXML(firstURL + preferredLocation.getProvince() + secondURL + preferredLocation.getCode() + thirdURL);
+        TextView ed1 = (TextView) findViewById(R.id.editText);
+        HandleXML obj = new HandleXML(firstURL + preferredLocation.getProvince() + secondURL + preferredLocation.getCode() + thirdURL);
         obj.fetchXML();
-        while(obj.parsingComplete);
+        while (obj.parsingComplete) ;
         ed1.setText(obj.getUVIndex());
-        Log.d("Refreshed",preferredLocation.getLocationName());
+        Log.d("Refreshed", preferredLocation.getLocationName());
+        showNotification();
     }
 
     @Override
@@ -100,7 +71,7 @@ public class UVIndexForecast extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_settings:
                 // User chose the "Settings" item, show the app settings UI...
-                startActivityForResult(new Intent(this, Settings.class),SETTINGS);
+                startActivityForResult(new Intent(this, Settings.class), SETTINGS);
                 return true;
 
             case R.id.action_refresh:
@@ -114,11 +85,10 @@ public class UVIndexForecast extends AppCompatActivity {
         }
     }
 
-    public static List<Location> getLocationResultList(String locationName)
-    {
+    public static List<Location> getLocationResultList(String locationName) {
         int j = 0;
-        List <Location> shortLocationList = new ArrayList<>();
-        for (int i = 0; i < locationResultList.size(); i++){
+        List<Location> shortLocationList = new ArrayList<>();
+        for (int i = 0; i < locationResultList.size(); i++) {
             if (locationResultList.get(i).getLocationName() != null && locationResultList.get(i).getLocationName().startsWith(locationName)) {
                 Location newLocation = new Location(locationResultList.get(i).getCode(), locationResultList.get(i).getLocationName(), locationResultList.get(i).getProvince());
                 Log.d("shortLocationList", newLocation.getLocationName());
@@ -131,4 +101,25 @@ public class UVIndexForecast extends AppCompatActivity {
         return shortLocationList;
     }
 
+    public void showNotification(){
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        Intent intent = new Intent("uvindexforecast.theoneandonly.com.uvindexforecast");
+        PendingIntent mPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
+        Notification.Builder mBuilder = new Notification.Builder(getApplicationContext());
+
+        mBuilder.setAutoCancel(false);
+        mBuilder.setContentTitle("UV Index Alert");
+        mBuilder.setTicker("ticker text here");
+        mBuilder.setContentText("Wear sunscreen tomorrow!");
+        mBuilder.setSmallIcon(android.R.drawable.ic_menu_day);
+        mBuilder.setContentIntent(mPendingIntent);
+        //mBuilder.setOngoing(true);
+        //API level 16
+        mBuilder.setSubText("The predicted UV index for tomorrow is 9");
+        mBuilder.setNumber(150);
+        mBuilder.build();
+        Notification mNotification = mBuilder.build();
+        notificationManager.notify(0, mNotification);
+    }
 }
