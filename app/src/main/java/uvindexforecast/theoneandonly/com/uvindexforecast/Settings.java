@@ -60,7 +60,6 @@ public class Settings extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_settings);
 
-
             // For switch button
             switchButton = (Switch) findViewById(R.id.switch1);
 
@@ -69,9 +68,15 @@ public class Settings extends AppCompatActivity {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean bChecked) {
                     if (bChecked) {
-                        //Switch is on
+                        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Settings.this);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putString("Notification", "True");
+                        editor.commit();
                     } else {
-                        //Switch is off
+                        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Settings.this);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putString("Notification", "False");
+                        editor.commit();
                     }
                 }
             });
@@ -81,8 +86,16 @@ public class Settings extends AppCompatActivity {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (isChecked) {
                 // do something when check is selected
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Settings.this);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("Notification", "True");
+                editor.commit();
             } else {
                 //do something when unchecked
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Settings.this);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("Notification", "False");
+                editor.commit();
             }
         }
 
@@ -108,14 +121,15 @@ public class Settings extends AppCompatActivity {
                                    int pos, long id) {
             // An item was selected. You can retrieve the selected item using
             // parent.getItemAtPosition(pos)
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Settings.this);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString("UV_threshold", (String)parent.getItemAtPosition(pos));
+            editor.commit();
         }
 
         public void onNothingSelected(AdapterView<?> parent) {
             // Another interface callback
         }
-
-        public Location getCurrentLocation(){
-            return currentLocation;
-        }
+        
     }
 }
