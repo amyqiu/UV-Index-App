@@ -13,9 +13,9 @@ public class Location {
 
     public Location()
     {
-        this.code = "s0000585";
+        /*this.code = "s0000585";
         this.location_name = "Markham";
-        this.province = "ON";
+        this.province = "ON";*/
     }
 
     public Location (String code, String location_name, String province)

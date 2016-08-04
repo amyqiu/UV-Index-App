@@ -64,8 +64,7 @@ public class UVIndexForecast extends AppCompatActivity {
         obj.fetchXML();
         while (obj.parsingComplete) ;
         ed1.setText(obj.getUVIndex());
-        Log.d("Refreshed", preferredLocation.getLocationName());
-        showNotification();
+        //showNotification();
     }
 
     @Override
@@ -132,7 +131,9 @@ public class UVIndexForecast extends AppCompatActivity {
     }
 
     public void turnOnNotification() {
+        Log.d("Notification", "Notification called"); //Worked
         if (prefs.getString("Notification", null) == "True") {
+            Log.d("Notification", "Notification called"); //Did not
             AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
             Intent notificationIntent = new Intent("android.media.action.DISPLAY_NOTIFICATION");
@@ -141,8 +142,8 @@ public class UVIndexForecast extends AppCompatActivity {
             PendingIntent broadcast = PendingIntent.getBroadcast(this, 100, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             Calendar cal = Calendar.getInstance();
-            cal.set(Calendar.HOUR_OF_DAY, 8);
-            cal.set(Calendar.MINUTE, 00);
+            cal.set(Calendar.HOUR_OF_DAY, prefs.getInt("Hour", 8));
+            cal.set(Calendar.MINUTE, prefs.getInt("Minute", 00));
             cal.set(Calendar.SECOND, 0);
 
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), AlarmManager.INTERVAL_DAY, broadcast);

@@ -1,6 +1,7 @@
 package uvindexforecast.theoneandonly.com.uvindexforecast;
 
 import android.app.Activity;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.Preference;
@@ -14,13 +15,22 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
-public class Settings extends AppCompatActivity {
-    private static Location currentLocation;
+import java.util.Calendar;
+
+public class Settings extends AppCompatActivity implements
+        View.OnClickListener{
+    private int mHour, mMinute;
+    private SharedPreferences prefs;
+    Button btnTimePicker;
+    EditText txtTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +40,13 @@ public class Settings extends AppCompatActivity {
         LocationAdapter adpt = new LocationAdapter(this, null);
         edt.setAdapter(adpt);
         //getActionBar().setDisplayHomeAsUpEnabled(true);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        edt.setText(prefs.getString("locationName", null) + ", " + prefs.getString("province", null));
 
         edt.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Location result = (Location) parent.getItemAtPosition(position);
-                currentLocation = result;
                 SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Settings.this);
                 //Log.d("SwA", "WOEID [" + result.getWoeid() + "]");
                 SharedPreferences.Editor editor = sharedPref.edit();
@@ -48,6 +59,41 @@ public class Settings extends AppCompatActivity {
             }
         });
 
+        btnTimePicker=(Button)findViewById(R.id.btn_time);
+        txtTime=(EditText)findViewById(R.id.in_time);
+        btnTimePicker.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        if (v == btnTimePicker) {
+
+            // Get Current Time
+            final Calendar c = Calendar.getInstance();
+            mHour = c.get(Calendar.HOUR_OF_DAY);
+            mMinute = c.get(Calendar.MINUTE);
+
+            // Launch Time Picker Dialog
+            TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                    new TimePickerDialog.OnTimeSetListener() {
+
+                        @Override
+                        public void onTimeSet(TimePicker view, int hourOfDay,
+                                              int minute) {
+
+                            txtTime.setText(hourOfDay + ":" + minute);
+                        }
+                    }, mHour, mMinute, false);
+            timePickerDialog.show();
+
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Settings.this);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putInt("Hour", mHour);
+            editor.putInt("Minute", mMinute);
+            editor.commit();
+
+        }
     }
 
     public class SwitchActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
@@ -130,6 +176,6 @@ public class Settings extends AppCompatActivity {
         public void onNothingSelected(AdapterView<?> parent) {
             // Another interface callback
         }
-        
+
     }
 }
