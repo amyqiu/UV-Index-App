@@ -11,6 +11,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,11 +27,12 @@ import android.widget.TimePicker;
 import java.util.Calendar;
 
 public class Settings extends AppCompatActivity implements
-        View.OnClickListener{
+        View.OnClickListener {
     private int mHour, mMinute;
     private SharedPreferences prefs;
     Button btnTimePicker;
     EditText txtTime;
+    Switch switchButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,6 @@ public class Settings extends AppCompatActivity implements
         //getActionBar().setDisplayHomeAsUpEnabled(true);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         edt.setText(prefs.getString("locationName", null) + ", " + prefs.getString("province", null));
-
         edt.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -59,8 +60,45 @@ public class Settings extends AppCompatActivity implements
             }
         });
 
-        btnTimePicker=(Button)findViewById(R.id.btn_time);
-        txtTime=(EditText)findViewById(R.id.in_time);
+        switchButton = (Switch) findViewById(R.id.switch1);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (prefs.getBoolean("Notification", false) == true) {
+            switchButton.setChecked(true);
+        } else {
+            switchButton.setChecked(false);
+        }
+        switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton cb, boolean on) {
+                if (on) {
+                    //Do something when Switch button is on/checked
+                    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Settings.this);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putBoolean("Notification", true);
+                    editor.commit();
+                } else {
+                    //Do something when Switch is off/unchecked
+                    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Settings.this);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putBoolean("Notification", true);
+                    editor.commit();
+                }
+            }
+        });
+        if (switchButton.isChecked()) {
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Settings.this);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean("Notification", true);
+            editor.commit();
+        } else {
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Settings.this);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean("Notification", true);
+            editor.commit();
+        }
+
+        btnTimePicker = (Button) findViewById(R.id.btn_time);
+        txtTime = (EditText) findViewById(R.id.in_time);
         btnTimePicker.setOnClickListener(this);
     }
 
@@ -96,59 +134,8 @@ public class Settings extends AppCompatActivity implements
         }
     }
 
-    public class SwitchActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
-
-        Switch switchButton = null;
-
-
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_settings);
-
-            // For switch button
-            switchButton = (Switch) findViewById(R.id.switch1);
-
-            switchButton.setChecked(true);
-            switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean bChecked) {
-                    if (bChecked) {
-                        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Settings.this);
-                        SharedPreferences.Editor editor = sharedPref.edit();
-                        editor.putString("Notification", "True");
-                        editor.commit();
-                    } else {
-                        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Settings.this);
-                        SharedPreferences.Editor editor = sharedPref.edit();
-                        editor.putString("Notification", "False");
-                        editor.commit();
-                    }
-                }
-            });
-        }
-
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if (isChecked) {
-                // do something when check is selected
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Settings.this);
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString("Notification", "True");
-                editor.commit();
-            } else {
-                //do something when unchecked
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Settings.this);
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString("Notification", "False");
-                editor.commit();
-            }
-        }
-
-    }
 
     public class SpinnerActivity extends Settings implements AdapterView.OnItemSelectedListener {
-
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -161,6 +148,7 @@ public class Settings extends AppCompatActivity implements
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             // Apply the adapter to the spinner
             spinner.setAdapter(adapter);
+            spinner.setSelection(prefs.getInt("UV_threshold_position", 0));
         }
 
         public void onItemSelected(AdapterView<?> parent, View view,
@@ -169,8 +157,10 @@ public class Settings extends AppCompatActivity implements
             // parent.getItemAtPosition(pos)
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Settings.this);
             SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString("UV_threshold", (String)parent.getItemAtPosition(pos));
+            editor.putInt("UV_threshold", (int)parent.getItemAtPosition(pos));
+            editor.putInt("UV_threshold_position", pos);
             editor.commit();
+            Log.d("UV_chosen", String.valueOf(pos));
         }
 
         public void onNothingSelected(AdapterView<?> parent) {
@@ -178,4 +168,5 @@ public class Settings extends AppCompatActivity implements
         }
 
     }
+
 }

@@ -132,7 +132,7 @@ public class UVIndexForecast extends AppCompatActivity {
 
     public void turnOnNotification() {
         Log.d("Notification", "Notification called"); //Worked
-        if (prefs.getString("Notification", null) == "True") {
+        if (prefs.getBoolean("Notification", false) == true) {
             Log.d("Notification", "Notification called"); //Did not
             AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
