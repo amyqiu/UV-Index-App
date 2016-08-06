@@ -9,6 +9,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.ListPreference;
+import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,7 +20,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.preference.PreferenceFragment;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,9 +48,10 @@ public class UVIndexForecast extends AppCompatActivity {
         locationResultList = new ArrayList<>();
         csvFile.read(locationResultList);
 
+
         refreshData();
-        turnOnNotification();
     }
+
 
     private void refreshData() {
         String firstURL = "http://dd.weather.gc.ca/citypage_weather/xml/";
@@ -108,31 +112,9 @@ public class UVIndexForecast extends AppCompatActivity {
         return shortLocationList;
     }
 
-    public void showNotification() {
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        Intent intent = new Intent("uvindexforecast.theoneandonly.com.uvindexforecast");
-        PendingIntent mPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
-        Notification.Builder mBuilder = new Notification.Builder(getApplicationContext());
-
-        mBuilder.setAutoCancel(false);
-        mBuilder.setContentTitle("UV Index Alert");
-        mBuilder.setTicker("ticker text here");
-        mBuilder.setContentText("Wear sunscreen tomorrow!");
-        mBuilder.setSmallIcon(android.R.drawable.ic_menu_day);
-        mBuilder.setContentIntent(mPendingIntent);
-        //mBuilder.setOngoing(true);
-        //API level 16
-        mBuilder.setSubText("The predicted UV index for tomorrow is 9");
-        mBuilder.setNumber(150);
-        mBuilder.build();
-        Notification mNotification = mBuilder.build();
-        notificationManager.notify(0, mNotification);
-    }
-
     public void turnOnNotification() {
         Log.d("Notification", "Notification called"); //Worked
-        if (prefs.getBoolean("Notification", false) == true) {
+        if (prefs.getBoolean("Notification", false)) {
             Log.d("Notification", "Notification called"); //Did not
             AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
@@ -149,4 +131,39 @@ public class UVIndexForecast extends AppCompatActivity {
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), AlarmManager.INTERVAL_DAY, broadcast);
         }
     }
+    public static class PrefsFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+            // set texts correctly
+            onSharedPreferenceChanged(null, "");
+
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            // Set up a listener whenever a key changes
+            getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        }
+
+        @Override
+        public void onPause() {
+            super.onPause();
+            // Set up a listener whenever a key changes
+            getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        }
+
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if (key.equals("Notification"))
+            {
+                //((UVIndexForecast)getActivity())turnOnNotification();
+
+        }
+    }
+}
+
 }

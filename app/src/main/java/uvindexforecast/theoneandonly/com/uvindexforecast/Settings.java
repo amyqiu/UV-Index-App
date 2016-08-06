@@ -23,14 +23,16 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
 public class Settings extends AppCompatActivity implements
-        View.OnClickListener {
+        View.OnClickListener{
     private int mHour, mMinute;
     private SharedPreferences prefs;
     Button btnTimePicker;
+    Spinner spinner;
     EditText txtTime;
     Switch switchButton;
 
@@ -80,7 +82,7 @@ public class Settings extends AppCompatActivity implements
                     //Do something when Switch is off/unchecked
                     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Settings.this);
                     SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putBoolean("Notification", true);
+                    editor.putBoolean("Notification", false);
                     editor.commit();
                 }
             }
@@ -93,12 +95,45 @@ public class Settings extends AppCompatActivity implements
         } else {
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Settings.this);
             SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putBoolean("Notification", true);
+            editor.putBoolean("Notification", false);
             editor.commit();
         }
 
-        btnTimePicker = (Button) findViewById(R.id.btn_time);
+        spinner = (Spinner) findViewById(R.id.spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.uv_index_options, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+        spinner.setSelection(prefs.getInt("UV_threshold_position", 0));
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+
+                Log.d("UV_selected", "Selected!");
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Settings.this);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("UV_threshold", (String)parent.getItemAtPosition(pos));
+                editor.putInt("UV_threshold_position", pos);
+                editor.commit();
+                Log.d("UV_chosen", String.valueOf(pos));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        Log.d("Spinner", "Initialized");
+
         txtTime = (EditText) findViewById(R.id.in_time);
+        if (prefs.getInt("Hour", 0) != 0) {
+            txtTime.setText(String.format("%02d:%02d", prefs.getInt("Hour", 0), prefs.getInt("Minute", 0)));
+        }
+
+        btnTimePicker = (Button) findViewById(R.id.btn_time);
         btnTimePicker.setOnClickListener(this);
     }
 
@@ -120,7 +155,7 @@ public class Settings extends AppCompatActivity implements
                         public void onTimeSet(TimePicker view, int hourOfDay,
                                               int minute) {
 
-                            txtTime.setText(hourOfDay + ":" + minute);
+                            txtTime.setText(String.format("%02d:%02d", hourOfDay, minute));
                         }
                     }, mHour, mMinute, false);
             timePickerDialog.show();
@@ -132,41 +167,6 @@ public class Settings extends AppCompatActivity implements
             editor.commit();
 
         }
-    }
-
-
-    public class SpinnerActivity extends Settings implements AdapterView.OnItemSelectedListener {
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_settings);
-            Spinner spinner = (Spinner) findViewById(R.id.spinner);
-            // Create an ArrayAdapter using the string array and a default spinner layout
-            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                    R.array.uv_index_options, android.R.layout.simple_spinner_item);
-            // Specify the layout to use when the list of choices appears
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            // Apply the adapter to the spinner
-            spinner.setAdapter(adapter);
-            spinner.setSelection(prefs.getInt("UV_threshold_position", 0));
-        }
-
-        public void onItemSelected(AdapterView<?> parent, View view,
-                                   int pos, long id) {
-            // An item was selected. You can retrieve the selected item using
-            // parent.getItemAtPosition(pos)
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Settings.this);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putInt("UV_threshold", (int)parent.getItemAtPosition(pos));
-            editor.putInt("UV_threshold_position", pos);
-            editor.commit();
-            Log.d("UV_chosen", String.valueOf(pos));
-        }
-
-        public void onNothingSelected(AdapterView<?> parent) {
-            // Another interface callback
-        }
-
     }
 
 }
