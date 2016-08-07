@@ -4,13 +4,16 @@ import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.Toolbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,14 +24,12 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
-
+import android.widget.TextView;
 import java.util.Calendar;
 
 public class Settings extends AppCompatActivity implements
-        View.OnClickListener{
+        View.OnClickListener {
     private int mHour, mMinute;
     private SharedPreferences prefs;
     Button btnTimePicker;
@@ -64,7 +65,7 @@ public class Settings extends AppCompatActivity implements
 
         switchButton = (Switch) findViewById(R.id.switch1);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if (prefs.getBoolean("Notification", false) == true) {
+        if (prefs.getBoolean("Notification", false)) {
             switchButton.setChecked(true);
         } else {
             switchButton.setChecked(false);
@@ -78,12 +79,15 @@ public class Settings extends AppCompatActivity implements
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putBoolean("Notification", true);
                     editor.commit();
+                    Log.d("Notification_on", "On");
                 } else {
                     //Do something when Switch is off/unchecked
+
                     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Settings.this);
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putBoolean("Notification", false);
                     editor.commit();
+                    Log.d("Notification_off", "Off");
                 }
             }
         });
@@ -115,7 +119,7 @@ public class Settings extends AppCompatActivity implements
                 Log.d("UV_selected", "Selected!");
                 SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Settings.this);
                 SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString("UV_threshold", (String)parent.getItemAtPosition(pos));
+                editor.putString("UV_threshold", (String) parent.getItemAtPosition(pos));
                 editor.putInt("UV_threshold_position", pos);
                 editor.commit();
                 Log.d("UV_chosen", String.valueOf(pos));
@@ -135,6 +139,10 @@ public class Settings extends AppCompatActivity implements
 
         btnTimePicker = (Button) findViewById(R.id.btn_time);
         btnTimePicker.setOnClickListener(this);
+
+        //getFragmentManager().beginTransaction().replace(android.R.id.content, new PrefsFragment()).commit();
+        getFragmentManager().beginTransaction().replace(R.id.content_frame, new PrefsFragment()).commit();
+
     }
 
     @Override
@@ -168,5 +176,44 @@ public class Settings extends AppCompatActivity implements
 
         }
     }
+
+
+
+public static class PrefsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+    private UVIndexForecast main_UV;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        main_UV = new UVIndexForecast();
+
+    }
+
+        /*@Override
+        public void onResume() {
+            super.onResume();
+            // Set up a listener whenever a key changes
+            getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+
+
+        }
+
+        @Override
+        public void onPause() {
+            super.onPause();
+            // Set up a listener whenever a key changes
+            getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        }*/
+
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if (key.equals("Notification")) {
+                Log.d("Notified", "Notification called");
+                main_UV.turnOnNotification();
+
+            }
+        }
+}
 
 }
