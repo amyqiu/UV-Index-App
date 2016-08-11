@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.prefs.PreferenceChangeListener;
 
 public class UVIndexForecast extends AppCompatActivity {
 
@@ -34,6 +35,11 @@ public class UVIndexForecast extends AppCompatActivity {
     private Location preferredLocation;
     private static ArrayList<Location> locationResultList;
     private static final int SETTINGS = 1;
+    // Preferences
+    private SharedPreferences mPrefs = null;
+
+    // Preference change listener
+    private PreferenceChangeListener mPreferenceListener = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +48,9 @@ public class UVIndexForecast extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
-        //PrefsFragment frag =  new PrefsFragment();
-
-        //getFragmentManager().beginTransaction().replace(android.R.id.content, frag).commit();
-
-        //getFragmentManager().beginTransaction().replace(android.R.id.content,
-               // new Settings.PrefsFragment()).commit();
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        mPreferenceListener = new PreferenceChangeListener();
+        mPrefs.registerOnSharedPreferenceChangeListener(mPreferenceListener);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         preferredLocation = new Location();
@@ -61,6 +64,11 @@ public class UVIndexForecast extends AppCompatActivity {
         refreshData();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mPrefs.unregisterOnSharedPreferenceChangeListener(mPreferenceListener);
+    }
 
     private void refreshData() {
         String firstURL = "http://dd.weather.gc.ca/citypage_weather/xml/";
@@ -122,9 +130,8 @@ public class UVIndexForecast extends AppCompatActivity {
     }
 
     public void turnOnNotification() {
-        Log.d("Notification", "Notification called"); //Worked
         if (prefs.getBoolean("Notification", false)) {
-            Log.d("Notification", "Notification called"); //Did not
+            Log.d("Notification", "Notification called");
             AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
             Intent notificationIntent = new Intent("android.media.action.DISPLAY_NOTIFICATION");
@@ -137,9 +144,24 @@ public class UVIndexForecast extends AppCompatActivity {
             cal.set(Calendar.MINUTE, prefs.getInt("Minute", 00));
             cal.set(Calendar.SECOND, 0);
 
+            Log.d("Hour", String.valueOf(prefs.getInt("Hour", 8)));
+            Log.d("Minute", String.valueOf(prefs.getInt("Minute", 00)));
+
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), AlarmManager.INTERVAL_DAY, broadcast);
         }
     }
 
+    // Handle preferences changes
+    private class PreferenceChangeListener implements OnSharedPreferenceChangeListener {
+
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+            if (key.equals("Notification")) {
+                Log.d("Notified", "Notification called");
+                turnOnNotification();
+
+            }
+        }
+    }
 
 }

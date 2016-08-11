@@ -31,6 +31,7 @@ import java.util.Calendar;
 public class Settings extends AppCompatActivity implements
         View.OnClickListener {
     private int mHour, mMinute;
+    private int newHour, newMinute;
     private SharedPreferences prefs;
     Button btnTimePicker;
     Spinner spinner;
@@ -141,7 +142,7 @@ public class Settings extends AppCompatActivity implements
         btnTimePicker.setOnClickListener(this);
 
         //getFragmentManager().beginTransaction().replace(android.R.id.content, new PrefsFragment()).commit();
-        getFragmentManager().beginTransaction().replace(R.id.content_frame, new PrefsFragment()).commit();
+        //getFragmentManager().beginTransaction().replace(R.id.content_frame, new PrefsFragment()).commit();
 
     }
 
@@ -150,10 +151,12 @@ public class Settings extends AppCompatActivity implements
 
         if (v == btnTimePicker) {
 
+
             // Get Current Time
             final Calendar c = Calendar.getInstance();
             mHour = c.get(Calendar.HOUR_OF_DAY);
             mMinute = c.get(Calendar.MINUTE);
+
 
             // Launch Time Picker Dialog
             TimePickerDialog timePickerDialog = new TimePickerDialog(this,
@@ -164,56 +167,24 @@ public class Settings extends AppCompatActivity implements
                                               int minute) {
 
                             txtTime.setText(String.format("%02d:%02d", hourOfDay, minute));
+                            newHour = hourOfDay;
+                            newMinute = minute;
+
+                            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Settings.this);
+                            SharedPreferences.Editor editor = sharedPref.edit();
+                            Log.d("newHour", String.valueOf(newHour));
+                            Log.d("newMinute", String.valueOf(newMinute));
+                            editor.putInt("Hour", newHour);
+                            editor.putInt("Minute", newMinute);
+                            editor.commit();
+
                         }
                     }, mHour, mMinute, false);
             timePickerDialog.show();
 
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Settings.this);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putInt("Hour", mHour);
-            editor.putInt("Minute", mMinute);
-            editor.commit();
-
         }
     }
 
 
-
-public static class PrefsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
-    private UVIndexForecast main_UV;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        main_UV = new UVIndexForecast();
-
-    }
-
-        /*@Override
-        public void onResume() {
-            super.onResume();
-            // Set up a listener whenever a key changes
-            getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-
-
-        }
-
-        @Override
-        public void onPause() {
-            super.onPause();
-            // Set up a listener whenever a key changes
-            getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
-        }*/
-
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (key.equals("Notification")) {
-                Log.d("Notified", "Notification called");
-                main_UV.turnOnNotification();
-
-            }
-        }
-}
 
 }

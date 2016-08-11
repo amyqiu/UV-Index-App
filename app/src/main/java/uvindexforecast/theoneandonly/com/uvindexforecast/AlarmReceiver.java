@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.preference.PreferenceManager;
 import android.support.v4.app.TaskStackBuilder;
 
 /**
@@ -14,6 +15,7 @@ import android.support.v4.app.TaskStackBuilder;
 public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
+
 
         Intent notificationIntent = new Intent(context, NotificationActivity.class);
 
