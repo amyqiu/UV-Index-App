@@ -35,6 +35,9 @@ public class UVIndexForecast extends AppCompatActivity {
     private Location preferredLocation;
     private static ArrayList<Location> locationResultList;
     private static final int SETTINGS = 1;
+    private String firstURL = "http://dd.weather.gc.ca/citypage_weather/xml/";
+    private String secondURL = "/";
+    private String thirdURL = "_e.xml";
     // Preferences
     private SharedPreferences mPrefs = null;
 
@@ -70,13 +73,11 @@ public class UVIndexForecast extends AppCompatActivity {
         mPrefs.unregisterOnSharedPreferenceChangeListener(mPreferenceListener);
     }
 
-    private void refreshData() {
-        String firstURL = "http://dd.weather.gc.ca/citypage_weather/xml/";
-        String secondURL = "/";
-        String thirdURL = "_e.xml";
+    private String refreshData() {
+
 
         if (prefs == null)
-            return;
+            return null;
         preferredLocation.setLocation_name(prefs.getString("locationName", null));
         preferredLocation.setProvince(prefs.getString("province", null));
         preferredLocation.setCode(prefs.getString("code", null));
@@ -85,7 +86,8 @@ public class UVIndexForecast extends AppCompatActivity {
         obj.fetchXML();
         while (obj.parsingComplete) ;
         ed1.setText(obj.getUVIndex());
-        //showNotification();
+        return obj.getUVIndex();
+
     }
 
     @Override
@@ -136,7 +138,7 @@ public class UVIndexForecast extends AppCompatActivity {
 
             Intent notificationIntent = new Intent("android.media.action.DISPLAY_NOTIFICATION");
             notificationIntent.addCategory("android.intent.category.DEFAULT");
-
+            notificationIntent.putExtra("currentUV", String.valueOf(refreshData()));
             PendingIntent broadcast = PendingIntent.getBroadcast(this, 100, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             Calendar cal = Calendar.getInstance();
@@ -156,10 +158,12 @@ public class UVIndexForecast extends AppCompatActivity {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-            if (key.equals("Notification")) {
+            if (key.equals("Notification")  || key.equals("Hour") || key.equals("Minute")) {
                 Log.d("Notified", "Notification called");
-                turnOnNotification();
-
+                String currentUV = refreshData();
+                if (Integer.valueOf(currentUV) >= Integer.valueOf(prefs.getString("UV_threshold", null))){
+                    turnOnNotification();
+                }
             }
         }
     }

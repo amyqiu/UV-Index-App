@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.preference.PreferenceManager;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.Log;
 
 /**
  * Created by Amy on 2016-08-01.
@@ -15,10 +16,10 @@ import android.support.v4.app.TaskStackBuilder;
 public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-
+        String displayUV = "unavailable";
 
         Intent notificationIntent = new Intent(context, NotificationActivity.class);
-
+        intent.setAction("android.media.action.DISPLAY_NOTIFICATION");
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addParentStack(NotificationActivity.class);
@@ -27,7 +28,11 @@ public class AlarmReceiver extends BroadcastReceiver {
         PendingIntent mPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         Notification.Builder mBuilder = new Notification.Builder(context);
 
-        //PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        if (intent != null)
+            if (intent.getExtras() != null)
+                if (intent.getStringExtra("currentUV") != null) {
+                    displayUV = intent.getStringExtra("currentUV");
+                }
 
         mBuilder.setAutoCancel(false);
         mBuilder.setContentTitle("UV Index Alert");
@@ -37,7 +42,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         mBuilder.setContentIntent(mPendingIntent);
         //mBuilder.setOngoing(true);
         //API level 16
-        mBuilder.setSubText("The predicted UV index for tomorrow is 9");
+        mBuilder.setSubText("The predicted UV index for tomorrow is " + displayUV);
         mBuilder.setNumber(150);
         mBuilder.build();
 
