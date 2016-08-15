@@ -2,7 +2,9 @@
     <string name="app_name">UV Index Forecast</string>
     <string name="today_label">Tomorrow\'s UV Index:</string>
     <string name="uv_index_forecast_app_id">24842</string>
-    <string name="high_uv_tips">Tips: Wear sunscreen with a SPF of at least 30, reapplying every 2 hours.</string>
+    <string name="high_uv_tips">Tips: Avoid the sun between 11 am. and 4 p.m. Protect skin with a high SPF sunscreen (30+), reapplying at least every two hours.</string>
+    <string name="medium_uv_tips">Tips: Reduce time in the sun between 11 a.m. and 4 p.m. If outside, use sunscreen with SPF of 30 or above.</string>
+    <string name="low_uv_tips">Tips: If outside for 30 minutes or more, cover up with a hat, long-sleeved clothing, or sunscreen. Look for shade near midday.</string>
     <string name="action_settings">Settings</string>
     <string name="action_refresh">Refresh</string>
     <string name="notification_toggle">Notify me if the UV index for tomorrow is high: </string>

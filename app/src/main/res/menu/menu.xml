@@ -7,9 +7,4 @@
         android:title="@string/action_settings"
         android:icon="@android:drawable/ic_menu_save"
         app:showAsAction="never"/>
-
-    <item android:id="@+id/action_refresh"
-        android:title="@string/action_refresh"
-        android:orderInCategory="50"
-        android:icon="@android:drawable/ic_menu_manage" />
 </menu>

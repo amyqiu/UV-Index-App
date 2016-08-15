@@ -73,6 +73,13 @@ public class UVIndexForecast extends AppCompatActivity {
         mPrefs.unregisterOnSharedPreferenceChangeListener(mPreferenceListener);
     }
 
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        refreshData();
+    }
+
     private String refreshData() {
 
 
@@ -82,10 +89,24 @@ public class UVIndexForecast extends AppCompatActivity {
         preferredLocation.setProvince(prefs.getString("province", null));
         preferredLocation.setCode(prefs.getString("code", null));
         TextView ed1 = (TextView) findViewById(R.id.editText);
+        TextView tips = (TextView) findViewById(R.id.tips);
         HandleXML obj = new HandleXML(firstURL + preferredLocation.getProvince() + secondURL + preferredLocation.getCode() + thirdURL);
         obj.fetchXML();
         while (obj.parsingComplete) ;
         ed1.setText(obj.getUVIndex());
+        int uv = Integer.parseInt(obj.getUVIndex());
+        if (uv > 6)
+        {
+            tips.setText(getResources().getString(R.string.high_uv_tips));
+        }
+        else if (uv > 3 && uv <= 6)
+        {
+            tips.setText(getResources().getString(R.string.medium_uv_tips));
+        }
+        else
+        {
+            tips.setText(getResources().getString(R.string.low_uv_tips));
+        }
         return obj.getUVIndex();
 
     }
@@ -103,9 +124,6 @@ public class UVIndexForecast extends AppCompatActivity {
                 // User chose the "Settings" item, show the app settings UI...
                 startActivityForResult(new Intent(this, Settings.class), SETTINGS);
                 return true;
-
-            case R.id.action_refresh:
-                refreshData();
 
             default:
                 // If we got here, the user's action was not recognized.
