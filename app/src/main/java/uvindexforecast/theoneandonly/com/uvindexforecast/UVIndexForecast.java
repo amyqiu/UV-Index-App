@@ -35,9 +35,7 @@ public class UVIndexForecast extends AppCompatActivity {
     private Location preferredLocation;
     private static ArrayList<Location> locationResultList;
     private static final int SETTINGS = 1;
-    private String firstURL = "http://dd.weather.gc.ca/citypage_weather/xml/";
-    private String secondURL = "/";
-    private String thirdURL = "_e.xml";
+
     // Preferences
     private SharedPreferences mPrefs = null;
 
@@ -57,6 +55,13 @@ public class UVIndexForecast extends AppCompatActivity {
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         preferredLocation = new Location();
+
+        TextView UV = (TextView) findViewById(R.id.editText);
+        if (prefs.getString("locationName", null) == null)
+        {
+            UV.setText(getResources().getString(R.string.choose_location));
+            UV.setTextSize(40);
+        }
 
         InputStream inputStream = getResources().openRawResource(R.raw.site_list_towns_en);
         HandleCSV csvFile = new HandleCSV(inputStream);
@@ -82,6 +87,9 @@ public class UVIndexForecast extends AppCompatActivity {
 
     private String refreshData() {
 
+        String firstURL = "http://dd.weather.gc.ca/citypage_weather/xml/";
+        String secondURL = "/";
+        String thirdURL = "_e.xml";
 
         if (prefs == null)
             return null;
@@ -94,6 +102,7 @@ public class UVIndexForecast extends AppCompatActivity {
         obj.fetchXML();
         while (obj.parsingComplete) ;
         ed1.setText(obj.getUVIndex());
+        ed1.setTextSize(90);
         int uv = Integer.parseInt(obj.getUVIndex());
         if (uv > 6)
         {
@@ -161,11 +170,11 @@ public class UVIndexForecast extends AppCompatActivity {
 
             Calendar cal = Calendar.getInstance();
             cal.set(Calendar.HOUR_OF_DAY, prefs.getInt("Hour", 8));
-            cal.set(Calendar.MINUTE, prefs.getInt("Minute", 00));
+            cal.set(Calendar.MINUTE, prefs.getInt("Minute", 0));
             cal.set(Calendar.SECOND, 0);
 
             Log.d("Hour", String.valueOf(prefs.getInt("Hour", 8)));
-            Log.d("Minute", String.valueOf(prefs.getInt("Minute", 00)));
+            Log.d("Minute", String.valueOf(prefs.getInt("Minute", 0)));
 
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), AlarmManager.INTERVAL_DAY, broadcast);
         }

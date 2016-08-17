@@ -30,9 +30,8 @@ import java.util.Calendar;
 
 public class Settings extends AppCompatActivity implements
         View.OnClickListener {
-    private int mHour, mMinute;
+
     private int newHour, newMinute;
-    private SharedPreferences prefs;
     Button btnTimePicker;
     Spinner spinner;
     EditText txtTime;
@@ -40,6 +39,9 @@ public class Settings extends AppCompatActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        SharedPreferences prefs;
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         AutoCompleteTextView edt = (AutoCompleteTextView) this.findViewById(R.id.edtLocation);
@@ -148,6 +150,8 @@ public class Settings extends AppCompatActivity implements
 
     @Override
     public void onClick(View v) {
+
+        int mHour, mMinute;
 
         if (v == btnTimePicker) {
 

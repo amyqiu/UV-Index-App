@@ -9,6 +9,7 @@
     <string name="action_refresh">Refresh</string>
     <string name="notification_toggle">Notify me if the UV index for tomorrow is high: </string>
     <string name="notification_threshold">Choose the UV threshold: </string>
+    <string name="choose_location">Please choose your location in Settings</string>
     <string-array name="uv_index_options">
         <item>1</item>
         <item>2</item>
