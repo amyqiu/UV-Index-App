@@ -41,9 +41,10 @@ public class Settings extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
 
         SharedPreferences prefs;
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        //Sets location to be the last-selected value
         AutoCompleteTextView edt = (AutoCompleteTextView) this.findViewById(R.id.edtLocation);
         LocationAdapter adpt = new LocationAdapter(this, null);
         edt.setAdapter(adpt);
@@ -66,6 +67,7 @@ public class Settings extends AppCompatActivity implements
             }
         });
 
+        //Sets notification toggle to last selected value
         switchButton = (Switch) findViewById(R.id.switch1);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (prefs.getBoolean("Notification", false)) {
@@ -73,6 +75,7 @@ public class Settings extends AppCompatActivity implements
         } else {
             switchButton.setChecked(false);
         }
+        //Turns on notifications if toggle is switched
         switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton cb, boolean on) {
@@ -106,6 +109,7 @@ public class Settings extends AppCompatActivity implements
             editor.commit();
         }
 
+        //Sets UV threshold level to last selected value
         spinner = (Spinner) findViewById(R.id.spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -118,7 +122,6 @@ public class Settings extends AppCompatActivity implements
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-
                 Log.d("UV_selected", "Selected!");
                 SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(Settings.this);
                 SharedPreferences.Editor editor = sharedPref.edit();
@@ -133,8 +136,8 @@ public class Settings extends AppCompatActivity implements
 
             }
         });
-        Log.d("Spinner", "Initialized");
 
+        //Sets time of notification to last-selected value
         txtTime = (EditText) findViewById(R.id.in_time);
         if (prefs.getInt("Hour", 0) != 0) {
             txtTime.setText(String.format("%02d:%02d", prefs.getInt("Hour", 0), prefs.getInt("Minute", 0)));
@@ -142,9 +145,6 @@ public class Settings extends AppCompatActivity implements
 
         btnTimePicker = (Button) findViewById(R.id.btn_time);
         btnTimePicker.setOnClickListener(this);
-
-        //getFragmentManager().beginTransaction().replace(android.R.id.content, new PrefsFragment()).commit();
-        //getFragmentManager().beginTransaction().replace(R.id.content_frame, new PrefsFragment()).commit();
 
     }
 
@@ -155,12 +155,10 @@ public class Settings extends AppCompatActivity implements
 
         if (v == btnTimePicker) {
 
-
             // Get Current Time
             final Calendar c = Calendar.getInstance();
             mHour = c.get(Calendar.HOUR_OF_DAY);
             mMinute = c.get(Calendar.MINUTE);
-
 
             // Launch Time Picker Dialog
             TimePickerDialog timePickerDialog = new TimePickerDialog(this,
@@ -185,10 +183,6 @@ public class Settings extends AppCompatActivity implements
                         }
                     }, mHour, mMinute, false);
             timePickerDialog.show();
-
         }
     }
-
-
-
 }

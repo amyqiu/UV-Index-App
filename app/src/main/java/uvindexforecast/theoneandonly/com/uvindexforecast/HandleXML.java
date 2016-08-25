@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+//Parses XML file to retrieve UV index for the locations
 public class HandleXML {
     private String UVIndex = "UV";
     private String urlString = null;

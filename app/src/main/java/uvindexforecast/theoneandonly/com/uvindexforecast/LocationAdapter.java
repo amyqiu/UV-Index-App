@@ -19,6 +19,8 @@ import java.util.List;
 /**
  * Created by Amy on 2016-07-17.
  */
+
+//Provides list of cities for picking location in Settings
 public class LocationAdapter extends ArrayAdapter<Location> implements Filterable {
     private Context ctx;
     private List<Location> locationList = new ArrayList<Location>();

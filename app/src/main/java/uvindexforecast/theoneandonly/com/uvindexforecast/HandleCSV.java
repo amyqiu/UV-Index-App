@@ -13,6 +13,8 @@ import java.util.List;
 /**
  * Created by Amy on 2016-07-14.
  */
+
+//Reads CSV file and processes codes associated with the locations
 public class HandleCSV {
     InputStream inputStream;
     ArrayList<String[]> resultList;

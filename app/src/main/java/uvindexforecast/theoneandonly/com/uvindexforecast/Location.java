@@ -5,17 +5,15 @@ import java.util.ArrayList;
 /**
  * Created by Amy on 2016-07-14.
  */
+
+//Location class with name, province, and code
 public class Location {
     private String location_name;
     private String province;
     private String code;
-    private ArrayList<Location> locationResultList;
 
     public Location()
     {
-        /*this.code = "s0000585";
-        this.location_name = "Markham";
-        this.province = "ON";*/
     }
 
     public Location (String code, String location_name, String province)
@@ -57,12 +55,6 @@ public class Location {
         this.code = code;
     }
 
-    public void setLocationList(ArrayList<Location> locationResultList)
-    {
-        this.locationResultList = locationResultList;
-    }
-
-    public ArrayList<Location> getLocationResultList(){return locationResultList; }
 }
 
 

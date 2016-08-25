@@ -56,6 +56,7 @@ public class UVIndexForecast extends AppCompatActivity {
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         preferredLocation = new Location();
 
+        //Sets UV index for the day
         TextView UV = (TextView) findViewById(R.id.editText);
         if (prefs.getString("locationName", null) == null)
         {
@@ -63,11 +64,11 @@ public class UVIndexForecast extends AppCompatActivity {
             UV.setTextSize(40);
         }
 
+        //Parses location list
         InputStream inputStream = getResources().openRawResource(R.raw.site_list_towns_en);
         HandleCSV csvFile = new HandleCSV(inputStream);
         locationResultList = new ArrayList<>();
         csvFile.read(locationResultList);
-
 
         refreshData();
     }
@@ -85,6 +86,7 @@ public class UVIndexForecast extends AppCompatActivity {
         refreshData();
     }
 
+    //Retrieves UV index based on city
     private String refreshData() {
 
         String firstURL = "http://dd.weather.gc.ca/citypage_weather/xml/";
@@ -154,10 +156,10 @@ public class UVIndexForecast extends AppCompatActivity {
                 j++;
             }
         }
-        //Log.d("shortLocationFirst", shortLocationList.get(0).toString());
         return shortLocationList;
     }
 
+    //Creates daily reoccurring notification
     public void turnOnNotification() {
         if (prefs.getBoolean("Notification", false)) {
             Log.d("Notification", "Notification called");
